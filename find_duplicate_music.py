@@ -1,10 +1,11 @@
 import os
 import time
 import json
-import mutagen
-from typing import Callable
 from collections import defaultdict
 from dataclasses import dataclass, asdict
+
+import mutagen
+import mutagen.wave
 
 """Config
 Args:
@@ -154,7 +155,6 @@ for root, dirs, files in os.walk(BASE_PATH):
 
         else:
             try:
-                audio_info: dict[str, Callable] | None
                 if (audio_info := mutagen.File(file_path)):
                     audio_info_keys_set = set(audio_info.keys())
 
@@ -190,7 +190,7 @@ for root, dirs, files in os.walk(BASE_PATH):
                         else (music_artist, file_path)
                     )
 
-            except (KeyError, TypeError, AttributeError):
+            except (KeyError, TypeError, AttributeError, mutagen.wave.error):
                 print(f"Build file info error: {file_path}")
                 error_keys.append(file_path)
 
